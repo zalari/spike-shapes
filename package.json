@@ -1,0 +1,16 @@
+{
+  "name": "@zalari/spike-shapes",
+  "version": "0.0.1",
+  "description": "A spike to visualize shapes",
+  "license": "MIT",
+  "author": {
+    "name": "David Enke",
+    "email": "david.enke@zalari.de"
+  },
+  "scripts": {
+    "start": "http-server --port 4000"
+  },
+  "devDependencies": {
+    "http-server": "0.12.1"
+  }
+}

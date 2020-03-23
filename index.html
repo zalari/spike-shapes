@@ -1,0 +1,167 @@
+<style>
+  html:before,
+  html:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: .5;
+
+    /*background: linear-gradient(225deg, red 0%, blue 100%) no-repeat center;*/
+    background: var(--bg-image) no-repeat center / cover;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+  }
+
+  html.squares:before,
+  html.squares:after {
+    transform: scale(var(--bg-zoom));
+  }
+
+  html.stripes:before,
+  html.stripes:after {
+    transform: scale(var(--bg-zoom)) skewX(-45deg);
+  }
+
+  html.triangles:before {
+    transform: scale(var(--bg-zoom)) skewX(-45deg);
+  }
+
+  html.triangles:after {
+    transform: scale(var(--bg-zoom)) skewX(45deg);
+  }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    overflow: hidden;
+  }
+
+  body:after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    height: 20vmin;
+    width: 20vmin;
+    z-index: 2;
+
+    background: var(--bg-image) no-repeat center / cover;
+  }
+
+  input, select {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  button {
+    background: #455871;
+    color: #f4f4f4;
+    border: 0;
+    border-radius: 5px;
+    outline: 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    padding: 8px 16px;
+  }
+
+  main {
+    position: absolute;
+    left: 20px;
+    bottom: 15px;
+    min-width: 300px;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  form,
+  main > button {
+    margin-bottom: 5px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  form button {
+    margin-left: 5px;
+  }
+</style>
+
+<main>
+  <form action="javascript:window.setEffect();">
+    <select onchange="this.parentElement.submit()">
+      <option value="squares">squares</option>
+      <option value="stripes">stripes</option>
+      <option value="triangles">triangles</option>
+    </select>
+  </form>
+  <form action="javascript:window.loadBackground();">
+    <input type="text"/>
+    <button type="submit">load</button>
+  </form>
+  <form action="javascript:window.loadBackground();">
+    <input max="6"
+           min=".1"
+           name="zoom"
+           oninput="this.parentElement.submit()"
+           step=".1"
+           type="range"
+           value="3"
+    />
+  </form>
+  <form action="javascript:window.loadBackground();">
+    <input max="100"
+           min="10"
+           name="size"
+           onchange="this.parentElement.submit()"
+           step="5"
+           type="range"
+           value="20"
+    />
+  </form>
+
+  <button onclick="window.loadBackground('/vulture/2016/08/11/11-obama-sex-playlist')">
+    load obama
+  </button>
+  <button onclick="window.loadBackground('/intelligencer/2020/03/04/04-barack-obama')">
+    load serious obama
+  </button>
+  <button onclick="window.loadBackground('/intelligencer/2020/03/23/23-donald-trump')">
+    load trump
+  </button>
+</main>
+
+<script>
+  window.setEffect = effect => {
+    if (effect !== undefined) {
+      document.querySelector('select').value = effect;
+    }
+    const { value } = document.querySelector('select');
+    document.documentElement.removeAttribute('class');
+    document.documentElement.classList.add(value);
+  };
+
+  window.loadBackground = src => {
+    if (src !== undefined) {
+      document.querySelector('input[type="text"]').value = src;
+    }
+    const { value: path } = document.querySelector('input[type="text"]');
+    const { value: size } = document.querySelector('input[name="size"]');
+    const { value: zoom } = document.querySelector('input[name="zoom"]');
+    const url = `url("http://pixel.nymag.com/imgs/daily${ path }.w${ size }.h${ size }.jpg")`;
+    document.documentElement.style.setProperty('--bg-image', url);
+    document.documentElement.style.setProperty('--bg-zoom', zoom);
+    console.info(`loaded image ${ url }`);
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    window.setEffect('triangles');
+    window.loadBackground('/vulture/2016/08/11/11-obama-sex-playlist');
+  }, false);
+</script>
